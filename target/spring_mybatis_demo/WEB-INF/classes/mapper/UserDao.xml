@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="com.garen.dao.UserDao">
+
+    <select id="findAllUser" parameterType="com.garen.domain.BaseQueryVo" resultType="com.garen.domain.User">
+        select * from user
+        <where>
+            <if test="baseQuery != null">
+                <if test="baseQuery.projectid != null and baseQuery.projectid != 0">
+                    and id = #{baseQuery.projectid, jdbcType=INTEGER}
+                </if>
+            </if>
+            <if test="data != null">
+                <if test="data.address != null and data.address != ''">
+                    and address like concat('%', #{data.address, jdbcType=VARCHAR}, '%')
+                </if>
+
+                <if test="data.sex != null and data.sex != -1">
+                    and sex = #{data.sex, jdbcType=INTEGER}
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <insert id="saveUser" parameterType="com.garen.domain.User">
+        insert into user (username, sex, address) values (#{username, jdbcType=VARCHAR}, #{sex, jdbcType=INTEGER}, #{address, jdbcType=VARCHAR})
+    </insert>
+
+</mapper>
